@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 <title>Sports Scorer</title>
+<link rel="icon" type="image/png" href="/public/favicon.png">
 <style>
 :root{
  --bg:#06101c;--panel:#0d1a2b;--panel2:#12243a;--text:#f5f7fb;--muted:#9aabc1;
@@ -212,12 +213,16 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   #scorerApp .cricketBackBtn{order:-1;padding:9px 12px}
 }
 
+.splashLogo{display:flex;justify-content:center;align-items:center;margin-bottom:12px}.splashLogo img{width:min(360px,72vw);max-height:150px;object-fit:contain;display:block}
+#sportsHub{position:relative;overflow:hidden}
+#sportsHub::before{content:"";position:absolute;inset:0;background-image:url("/public/watermark.png");background-repeat:no-repeat;background-position:center center;background-size:min(850px,90vw);opacity:.07;pointer-events:none;z-index:0}
+#sportsHub>.sportsWrap{position:relative;z-index:1}
 </style>
 </head>
 <body>
 <div id="gameSplash" aria-label="Game On loading screen">
   <div class="splashInner">
-    <div class="splashBrand">Sports Scorer</div>
+    <div class="splashLogo"><img src="/public/logo.png" alt="Sports Scorer"></div>
     <div class="splashTitle">Game On</div>
     <div class="splashBy">by Devesh Goswami</div>
     <div class="loadingText">Loading<span class="loadingDots"><i></i><i></i><i></i></span></div>
