@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 <title>Sports Scorer</title>
-<link rel="icon" type="image/png" href="/public/favicon.png">
 <style>
 :root{
  --bg:#06101c;--panel:#0d1a2b;--panel2:#12243a;--text:#f5f7fb;--muted:#9aabc1;
@@ -213,16 +212,17 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   #scorerApp .cricketBackBtn{order:-1;padding:9px 12px}
 }
 
-.splashLogo{display:flex;justify-content:center;align-items:center;margin-bottom:12px}.splashLogo img{width:min(360px,72vw);max-height:150px;object-fit:contain;display:block}
-#sportsHub{position:relative;overflow:hidden}
-#sportsHub::before{content:"";position:absolute;inset:0;background-image:url("/public/watermark.png");background-repeat:no-repeat;background-position:center center;background-size:min(850px,90vw);opacity:.07;pointer-events:none;z-index:0}
-#sportsHub>.sportsWrap{position:relative;z-index:1}
+
+.splashLogo{display:flex;justify-content:center;align-items:center;margin-bottom:12px}
+.splashLogo img{width:min(360px,72vw);max-height:150px;object-fit:contain;display:block}
+@media(max-width:560px){.splashLogo img{width:min(280px,78vw);max-height:120px}}
+
 </style>
 </head>
 <body>
 <div id="gameSplash" aria-label="Game On loading screen">
   <div class="splashInner">
-    <div class="splashLogo"><img src="/public/logo.png" alt="Sports Scorer"></div>
+    <div class="splashLogo"><img src="/public/logo.png" alt="Sports Scorer Logo"></div>
     <div class="splashTitle">Game On</div>
     <div class="splashBy">by Devesh Goswami</div>
     <div class="loadingText">Loading<span class="loadingDots"><i></i><i></i><i></i></span></div>
@@ -645,14 +645,32 @@ function initGameOn(){
   setTimeout(()=>splash.classList.add("hide"),5000);
 }
 
+
+/* ===== Live timers ===== */
+setInterval(()=>{
+  if (fb.running && fb.sec < 5400) {
+    fb.sec++;
+    const m=Math.floor(fb.sec/60), s=fb.sec%60;
+    $("fbClock").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  }
+  if (bb.run && bb.sec > 0) {
+    bb.sec--;
+    if(bb.sec===0){
+      bb.run=false;
+      $("bbStatus").textContent="Quarter time over";
+    }
+    bbRender();
+  }
+},1000);
+
 /* ===== Football scorer ===== */
 const fb={a:0,b:0,running:false,sec:0,events:[],shotsA:0,shotsB:0,cards:0,history:[]};
-function fbRender(){ $("fbA").textContent=fb.a;$("fbB").textContent=fb.b;$("fbShotsA").textContent=fb.shotsA;$("fbShotsB").textContent=fb.shotsB;$("fbCards").textContent=fb.cards;$("fbEvents").innerHTML=fb.events.length?fb.events.slice(-8).reverse().map(x=>"• "+x).join("<br>"):"No events yet."; }
-function fbStart(){fb.a=fb.b=fb.sec=0;fb.events=[];fb.shotsA=fb.shotsB=fb.cards=0;fb.history=[];$("fbTeamA").textContent=$("fbInA").value||"Home";$("fbTeamB").textContent=$("fbInB").value||"Away";$("fbStatus").textContent="Match started";fbRender();}
+function fbRender(){ const fc=$("fbClock"); if(fc){const m=Math.floor(fb.sec/60),s=fb.sec%60;fc.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");} $("fbA").textContent=fb.a;$("fbB").textContent=fb.b;$("fbShotsA").textContent=fb.shotsA;$("fbShotsB").textContent=fb.shotsB;$("fbCards").textContent=fb.cards;$("fbEvents").innerHTML=fb.events.length?fb.events.slice(-8).reverse().map(x=>"• "+x).join("<br>"):"No events yet."; }
+function fbStart(){fb.a=fb.b=fb.sec=0;fb.events=[];fb.shotsA=fb.shotsB=fb.cards=0;fb.history=[];fb.running=false;$("fbTeamA").textContent=$("fbInA").value||"Home";$("fbTeamB").textContent=$("fbInB").value||"Away";$("fbStatus").textContent="Match started";fbRender();}
 function fbGoal(t){fb.history.push([fb.a,fb.b]);t===1?fb.a++:fb.b++;t===1?fb.shotsA++:fb.shotsB++;fb.events.push((t===1?$("fbTeamA").textContent:$("fbTeamB").textContent)+" scored");fbRender();}
 function fbUndo(){const h=fb.history.pop();if(h){fb.a=h[0];fb.b=h[1];fbRender()}}
 function fbReset(){fb.a=fb.b=0;fb.history=[];fb.events=[];fb.shotsA=fb.shotsB=fb.cards=0;fbRender()}
-function fbToggle(){fb.running=!fb.running;$("fbStatus").textContent=fb.running?"Timer running":"Timer paused"}
+function fbToggle(){fb.running=!fb.running;$("fbStatus").textContent=fb.running?"Timer running":"Timer paused";fbRender();}
 function fbHalfChange(){const p=$("fbHalf");p.textContent=p.textContent==="1st Half"?"2nd Half":"1st Half"}
 function fbEvent(e){fb.events.push(e);if(e.includes("card"))fb.cards++;fbRender()}
 
@@ -672,7 +690,7 @@ function bbStart(){bb.a=bb.b=bb.fa=bb.fb=0;bb.q=1;bb.qa=+($("bbQTotal").value||4
 function bbPoint(t,p){bb.h.push({...bb});t===1?bb.a+=p:bb.b+=p;bb.pos=t;bbRender()}
 function bbUndo(){const h=bb.h.pop();if(h)Object.assign(bb,h);bbRender()}
 function bbReset(){bbStart()}
-function bbToggle(){bb.run=!bb.run;$("bbStatus").textContent=bb.run?"Clock running":"Clock paused"}
+function bbToggle(){if(bb.sec<=0)bb.sec=bb.mins*60;bb.run=!bb.run;$("bbStatus").textContent=bb.run?"Clock running":"Clock paused";bbRender();}
 function bbNextQ(){if(bb.q<bb.qa){bb.q++;bb.sec=bb.mins*60;$("bbStatus").textContent="Quarter "+bb.q;bbRender()}}
 function bbFoul(t){t===1?bb.fa++:bb.fb++;bbRender()}
 
