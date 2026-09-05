@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
+<link rel="icon" type="image/png" href="/public/favicon.png">
 <title>Sports Scorer</title>
 <style>
 :root{
@@ -71,9 +72,15 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
 @keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-6px);opacity:1}}
 
 /* ===== Sports Hub ===== */
-#sportsHub{display:none;min-height:100vh;padding:28px 16px 40px}
+#sportsHub{display:none;min-height:100vh;padding:28px 16px 40px;position:relative;overflow:hidden}
 #sportsHub.active{display:block}
-.sportsWrap{max-width:1100px;margin:auto}
+#sportsHub::before{
+  content:"";position:absolute;inset:0;
+  background:url('/public/watermark.png') no-repeat center center;
+  background-size:min(60%,420px);
+  opacity:.08;pointer-events:none;z-index:0
+}
+.sportsWrap{max-width:1100px;margin:auto;position:relative;z-index:1}
 .sportsHead{text-align:center;margin:22px 0 30px}
 .sportsHead h1{font-size:clamp(34px,6vw,58px);letter-spacing:-2px}
 .sportsHead p{color:var(--muted);margin-top:8px}
