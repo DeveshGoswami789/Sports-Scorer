@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://devesh-goswami.onrender.com/sitemap.xml
+Sitemap: https://sports-scorer.onrender.com/sitemap.xml
