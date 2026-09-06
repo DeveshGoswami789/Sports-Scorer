@@ -4,8 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
+<meta name="description" content="Sports Scorer is a free online scorekeeping app for cricket, football, badminton, basketball and table tennis. Track scores, match stats and game progress on phone or desktop.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Devesh Goswami">
+<link rel="canonical" href="https://devesh-goswami.onrender.com/">
 <link rel="icon" type="image/png" href="/public/favicon.png">
-<title>Sports Scorer</title>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://devesh-goswami.onrender.com/">
+<meta property="og:title" content="Sports Scorer – Free Online Sports Scorekeeper">
+<meta property="og:description" content="Score cricket, football, badminton, basketball and table tennis matches with a free, mobile-friendly online scorer.">
+<meta property="og:image" content="https://devesh-goswami.onrender.com/public/logo.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sports Scorer – Free Online Sports Scorekeeper">
+<meta name="twitter:description" content="Free online scorer for cricket, football, badminton, basketball and table tennis.">
+<title>Sports Scorer – Free Online Cricket & Sports Scorekeeper</title>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Sports Scorer",
+  "url":"https://devesh-goswami.onrender.com/",
+  "description":"Free online sports scorekeeping app for cricket, football, badminton, basketball and table tennis.",
+  "applicationCategory":"SportsApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires a modern web browser",
+  "author":{"@type":"Person","name":"Devesh Goswami"}
+}
+</script>
 <style>
 :root{
  --bg:#06101c;--panel:#0d1a2b;--panel2:#12243a;--text:#f5f7fb;--muted:#9aabc1;
@@ -51,6 +76,8 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
 .scoretable{width:100%;border-collapse:collapse;font-size:12px}.scoretable th,.scoretable td{padding:8px;border-bottom:1px solid var(--line);text-align:right}.scoretable th:first-child,.scoretable td:first-child{text-align:left}.scoretable th{color:var(--muted)}
 .quickgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.muted{color:var(--muted)}.pill{display:inline-block;padding:3px 7px;border-radius:99px;background:rgba(24,196,125,.12);color:#69e9b0;font-size:10px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}.setup{grid-column:auto}.formgrid{grid-template-columns:repeat(2,1fr)}}
+.seoIntro{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}
+.seoIntro h2{font-size:20px;margin-bottom:7px}.seoIntro p{color:var(--muted);line-height:1.6;font-size:13px}
 @media(max-width:560px){.app{padding:8px}.topbar{align-items:flex-start}.brand h1{font-size:18px}.brand small{font-size:10px}.actions{justify-content:flex-end}.score{font-size:50px}.metrics{grid-template-columns:repeat(2,1fr)}.players{grid-template-columns:1fr}.controls{grid-template-columns:repeat(4,1fr)}.formgrid{grid-template-columns:1fr}.ballrow{grid-template-columns:36px 42px 1fr auto}.barrow{grid-template-columns:70px 1fr 35px}}
 
 /* ===== Game On Splash ===== */
@@ -261,6 +288,10 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
       <button class="sportCard" onclick="openSport('badminton')"><span class="sportIcon">🏸</span><span class="sportName">Badminton</span><span class="sportHint">Game scorer</span></button>
       <button class="sportCard" onclick="openSport('basketball')"><span class="sportIcon">🏀</span><span class="sportName">Basketball</span><span class="sportHint">Match scorer</span></button>
       <button class="sportCard" onclick="openSport('table-tennis')"><span class="sportIcon">🏓</span><span class="sportName">Table Tennis</span><span class="sportHint">Game scorer</span></button>
+    </div>
+    <div class="seoIntro">
+      <h2>Free Online Sports Scorer</h2>
+      <p>Sports Scorer is a free, mobile-friendly online scorekeeper for <strong>cricket, football, badminton, basketball and table tennis</strong>. Choose a sport to track scores and match progress on your phone, tablet or desktop.</p>
     </div>
   </div>
 </section>
