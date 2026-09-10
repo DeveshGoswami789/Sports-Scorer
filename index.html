@@ -275,6 +275,25 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
 .tossChoice{display:flex;gap:10px;justify-content:center;margin-top:12px}.tossChoice button{flex:1;min-height:68px;border:1px solid var(--line);border-radius:15px;background:var(--panel2);color:var(--text);font-size:17px;font-weight:900;transition:transform .15s,border-color .15s,background .15s}.tossChoice button:hover{transform:translateY(-2px);border-color:var(--green);background:rgba(24,196,125,.1)}
 .tossSkip{display:block;margin:16px 0 0 auto;border:0;background:transparent;color:var(--muted);font-size:12px;padding:7px 2px}.tossSkip:hover{color:var(--text)}.tossHint{font-size:11px;color:var(--muted);margin-top:4px}
 
+
+/* ===== Other Creations ===== */
+.otherCreationsModal{position:fixed;inset:0;z-index:6000;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.68);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.otherCreationsModal.hidden{display:none}
+.otherCreationsBox{width:min(520px,94vw);max-height:min(720px,88vh);overflow:auto;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.42);animation:otherCreationsIn .22s ease-out}
+@keyframes otherCreationsIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.otherCreationsHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.otherCreationsTitle{font-size:22px;font-weight:800;color:var(--text)}
+.otherCreationsClose{border:1px solid var(--line);background:var(--panel);color:var(--text);width:36px;height:36px;border-radius:11px;font-size:25px;line-height:1;cursor:pointer}
+.otherCreationsClose:hover{filter:brightness(1.12)}
+.otherCreationsSub{margin:7px 0 18px;color:var(--muted);font-size:13px;line-height:1.5}
+.otherProjectList{display:grid;gap:11px}
+.otherProjectCard{display:block;text-decoration:none;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;transition:transform .16s ease,filter .16s ease,border-color .16s ease}
+.otherProjectCard:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.otherProjectName{font-weight:800;font-size:16px;margin-bottom:6px}
+.otherProjectLink{display:block;font-size:12px;color:var(--accent,#60a5fa);word-break:break-all}
+.otherCreationsFooter{margin-top:19px;padding-top:15px;border-top:1px solid var(--line);text-align:center;font-family:Georgia,'Times New Roman',serif;font-style:italic;color:var(--muted);font-size:13px;line-height:1.5}
+@media(max-width:520px){.otherCreationsBox{padding:18px;border-radius:19px}.otherCreationsTitle{font-size:20px}.otherProjectCard{padding:13px}}
+
 </style>
 </head>
 <body>
@@ -294,6 +313,7 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
       <div class="menuWrap">
         <button class="sportsMenuBtn" aria-label="Open menu" onclick="toggleMainMenu()">⋮</button>
         <div id="mainMenu" class="menuPanel">
+          <button class="menuItem" onclick="openOtherCreations()">🌐 Other Creations</button>
           <button class="menuItem" onclick="contactUs()">📧 Contact Us</button>
           <button class="menuItem" onclick="toggleThemeMenu()">🎨 Theme Mode</button>
           <div id="themeChoices" class="themeChoice" style="display:none">
@@ -859,6 +879,44 @@ function ttReset(){ttStart()}
 
 (function(){let raw=localStorage.getItem(KEY);if(raw){try{restoreObject(JSON.parse(raw))}catch(e){}}document.documentElement.setAttribute("data-theme",state.theme==="light"?"light":"dark");render()})();
 initGameOn(); loadAppTheme(); fbRender(); bdStart(); bbStart(); ttStart();
+
+function openOtherCreations(){
+  $("mainMenu")?.classList.remove("open");
+  $("themeChoices").style.display="none";
+  $("otherCreationsModal")?.classList.remove("hidden");
+}
+function closeOtherCreations(){
+  $("otherCreationsModal")?.classList.add("hidden");
+}
+document.addEventListener("click",e=>{
+  if(e.target && e.target.id==="otherCreationsModal") closeOtherCreations();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeOtherCreations();
+});
+
 </script>
+
+<div id="otherCreationsModal" class="otherCreationsModal hidden" aria-modal="true" role="dialog" aria-labelledby="otherCreationsTitle">
+  <div class="otherCreationsBox" onclick="event.stopPropagation()">
+    <div class="otherCreationsHead">
+      <div class="otherCreationsTitle" id="otherCreationsTitle">Our Other Creations</div>
+      <button class="otherCreationsClose" aria-label="Close" onclick="closeOtherCreations()">×</button>
+    </div>
+    <div class="otherCreationsSub">Explore more websites created by Devesh Goswami.</div>
+    <div class="otherProjectList">
+      <a class="otherProjectCard" href="https://sports-scorer.onrender.com/" target="_blank" rel="noopener noreferrer">
+        <div class="otherProjectName">🏏 Sports Scorer</div>
+        <span class="otherProjectLink">https://sports-scorer.onrender.com/</span>
+      </a>
+      <a class="otherProjectCard" href="https://devesh-goswami.onrender.com/" target="_blank" rel="noopener noreferrer">
+        <div class="otherProjectName">💬 Voxa</div>
+        <span class="otherProjectLink">https://devesh-goswami.onrender.com/</span>
+      </a>
+    </div>
+    <div class="otherCreationsFooter">New creations coming soon if you continue to support us... <span>❤️</span></div>
+  </div>
+</div>
+
 </body>
 </html>
