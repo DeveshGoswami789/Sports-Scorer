@@ -294,6 +294,35 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
 .otherCreationsFooter{margin-top:19px;padding-top:15px;border-top:1px solid var(--line);text-align:center;font-family:Georgia,'Times New Roman',serif;font-style:italic;color:var(--muted);font-size:13px;line-height:1.5}
 @media(max-width:520px){.otherCreationsBox{padding:18px;border-radius:19px}.otherCreationsTitle{font-size:20px}.otherProjectCard{padding:13px}}
 
+
+/* ===== Cricket Winning Chances ===== */
+.winChance{margin:14px 0 0;padding:15px 16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,var(--panel2),var(--panel));}
+.winChanceHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.winChanceHead b{font-size:15px}.winChanceHead small{color:var(--muted);font-size:11px}
+.winChanceTeams{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:12px;text-align:center}
+.winChanceTeam b{display:block;font-size:24px;line-height:1.1}.winChanceTeam small{display:block;color:var(--muted);margin-top:4px}
+.winChanceTeam.right{text-align:center}.winChancePct{font-size:27px!important}
+.winChanceBar{height:9px;display:flex;overflow:hidden;border-radius:99px;background:var(--line);margin-top:13px}
+.winChanceBar i{display:block;height:100%;transition:width .35s ease}.winChanceA{background:var(--green)}.winChanceB{background:var(--blue)}
+.winChanceNote{text-align:center;color:var(--muted);font-size:11px;margin-top:9px}
+@media(max-width:560px){.winChanceTeam b{font-size:19px}.winChancePct{font-size:23px!important}.winChanceTeams{gap:7px}}
+
+
+/* ===== About Modal ===== */
+.aboutModal{position:fixed;inset:0;z-index:7000;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.70);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.aboutModal.hidden{display:none}
+.aboutBox{width:min(560px,94vw);max-height:min(760px,88vh);overflow:auto;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.aboutHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.aboutTitle{font-size:23px;font-weight:900}
+.aboutClose{border:1px solid var(--line);background:var(--panel);color:var(--text);width:36px;height:36px;border-radius:11px;font-size:24px;cursor:pointer}
+.aboutSub{margin:7px 0 18px;color:var(--muted);font-size:13px;line-height:1.5}
+.aboutSection{padding:13px 0;border-top:1px solid var(--line)}
+.aboutSection h4{margin:0 0 6px;font-size:14px}
+.aboutSection p,.aboutSection li{color:var(--muted);font-size:13px;line-height:1.6}
+.aboutSection ul{margin:6px 0 0 18px}
+.aboutVersion{display:inline-block;margin-top:6px;padding:5px 9px;border-radius:99px;background:rgba(24,196,125,.12);color:var(--green);font-size:11px;font-weight:800}
+@media(max-width:520px){.aboutBox{padding:18px;border-radius:19px}.aboutTitle{font-size:20px}}
+
 </style>
 </head>
 <body>
@@ -314,6 +343,7 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
         <button class="sportsMenuBtn" aria-label="Open menu" onclick="toggleMainMenu()">⋮</button>
         <div id="mainMenu" class="menuPanel">
           <button class="menuItem" onclick="openOtherCreations()">🌐 Other Creations</button>
+          <button class="menuItem" onclick="openAbout()">ℹ️ About</button>
           <button class="menuItem" onclick="contactUs()">📧 Contact Us</button>
           <button class="menuItem" onclick="toggleThemeMenu()">🎨 Theme Mode</button>
           <div id="themeChoices" class="themeChoice" style="display:none">
@@ -346,6 +376,12 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   <div class="scorerWrap">
     <div class="sportTop"><button class="sportBack" onclick="showSportsHub()">← Sports</button><h2>⚽ Football Scorer</h2></div>
     <div class="scoreHero"><div class="scoreLine"><div class="teamBox"><small id="fbTeamA">Home</small><div class="bigScore" id="fbA">0</div></div><div class="scoreMeta"><b id="fbClock">00:00</b><div id="fbHalf">1st Half</div></div><div class="teamBox"><small id="fbTeamB">Away</small><div class="bigScore" id="fbB">0</div></div></div><div class="matchStatus" id="fbStatus">Not started</div></div>
+    <div class="winChance" id="footballWinChance">
+      <div class="winChanceHead"><b>🏆 Winning Chances</b><small>Live estimate</small></div>
+      <div class="winChanceTeams"><div class="winChanceTeam"><b id="fbWinTeamA">Home</b><b class="winChancePct" id="fbWinPctA">50%</b></div><div>vs</div><div class="winChanceTeam right"><b id="fbWinTeamB">Away</b><b class="winChancePct" id="fbWinPctB">50%</b></div></div>
+      <div class="winChanceBar"><i class="winChanceA" id="fbWinBarA" style="width:50%"></i><i class="winChanceB" id="fbWinBarB" style="width:50%"></i></div>
+      <div class="winChanceNote" id="fbWinNote">Available once the match starts.</div>
+    </div>
     <div class="scorerGrid">
       <div class="scorerPanel"><h3>Teams & Match</h3><div class="fieldRow"><input id="fbInA" placeholder="Home team"><input id="fbInB" placeholder="Away team"></div><div class="fieldRow" style="margin-top:10px"><select id="fbPeriod"><option>1st Half</option><option>2nd Half</option><option>Extra Time 1</option><option>Extra Time 2</option><option>Penalty Shootout</option></select><input id="fbDuration" type="number" value="90" min="1" placeholder="Minutes"></div><button class="primaryBtn" style="margin-top:10px;width:100%" onclick="fbStart()">Start Match</button></div>
       <div class="scorerPanel"><h3>Score Actions</h3><div class="actionGrid"><button onclick="fbGoal(1)">⚽ Home Goal</button><button onclick="fbGoal(2)">⚽ Away Goal</button><button onclick="fbUndo()">↩ Undo</button><button onclick="fbReset()" class="dangerBtn">Reset</button></div></div>
@@ -359,6 +395,12 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   <div class="scorerWrap">
     <div class="sportTop"><button class="sportBack" onclick="showSportsHub()">← Sports</button><h2>🏸 Badminton Scorer</h2></div>
     <div class="scoreHero"><div class="scoreLine"><div class="teamBox"><small id="bdNameA">Player 1</small><div class="bigScore" id="bdA">0</div></div><div class="scoreMeta"><b>Game <span id="bdGame">1</span></b><div id="bdBest">Best of 3</div></div><div class="teamBox"><small id="bdNameB">Player 2</small><div class="bigScore" id="bdB">0</div></div></div><div class="matchStatus" id="bdStatus">Game in progress</div></div>
+    <div class="winChance" id="badmintonWinChance">
+      <div class="winChanceHead"><b>🏆 Winning Chances</b><small>Live estimate</small></div>
+      <div class="winChanceTeams"><div class="winChanceTeam"><b id="bdWinTeamA">Player 1</b><b class="winChancePct" id="bdWinPctA">50%</b></div><div>vs</div><div class="winChanceTeam right"><b id="bdWinTeamB">Player 2</b><b class="winChancePct" id="bdWinPctB">50%</b></div></div>
+      <div class="winChanceBar"><i class="winChanceA" id="bdWinBarA" style="width:50%"></i><i class="winChanceB" id="bdWinBarB" style="width:50%"></i></div>
+      <div class="winChanceNote" id="bdWinNote">Live game estimate.</div>
+    </div>
     <div class="scorerGrid">
       <div class="scorerPanel"><h3>Players & Format</h3><div class="fieldRow"><input id="bdInA" placeholder="Player / Pair 1"><input id="bdInB" placeholder="Player / Pair 2"></div><div class="fieldRow" style="margin-top:10px"><select id="bdBestIn"><option value="3">Best of 3</option><option value="5">Best of 5</option></select><input id="bdTarget" type="number" value="21" min="1" placeholder="Points"></div><button class="primaryBtn" style="margin-top:10px;width:100%" onclick="bdStart()">Start / New Match</button></div>
       <div class="scorerPanel"><h3>Point Controls</h3><div class="actionGrid"><button onclick="bdPoint(1)">+ Point P1</button><button onclick="bdPoint(2)">+ Point P2</button><button onclick="bdUndo()">↩ Undo</button><button onclick="bdReset()" class="dangerBtn">Reset</button></div></div>
@@ -372,6 +414,12 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   <div class="scorerWrap">
     <div class="sportTop"><button class="sportBack" onclick="showSportsHub()">← Sports</button><h2>🏀 Basketball Scorer</h2></div>
     <div class="scoreHero"><div class="scoreLine"><div class="teamBox"><small id="bbNameA">Home</small><div class="bigScore" id="bbA">0</div></div><div class="scoreMeta"><b id="bbClock">10:00</b><div>Quarter <span id="bbQ">1</span></div></div><div class="teamBox"><small id="bbNameB">Away</small><div class="bigScore" id="bbB">0</div></div></div><div class="matchStatus" id="bbStatus">Quarter 1</div></div>
+    <div class="winChance" id="basketballWinChance">
+      <div class="winChanceHead"><b>🏆 Winning Chances</b><small>Live estimate</small></div>
+      <div class="winChanceTeams"><div class="winChanceTeam"><b id="bbWinTeamA">Home</b><b class="winChancePct" id="bbWinPctA">50%</b></div><div>vs</div><div class="winChanceTeam right"><b id="bbWinTeamB">Away</b><b class="winChancePct" id="bbWinPctB">50%</b></div></div>
+      <div class="winChanceBar"><i class="winChanceA" id="bbWinBarA" style="width:50%"></i><i class="winChanceB" id="bbWinBarB" style="width:50%"></i></div>
+      <div class="winChanceNote" id="bbWinNote">Live game estimate.</div>
+    </div>
     <div class="scorerGrid">
       <div class="scorerPanel"><h3>Teams & Format</h3><div class="fieldRow"><input id="bbInA" placeholder="Home team"><input id="bbInB" placeholder="Away team"></div><div class="fieldRow" style="margin-top:10px"><input id="bbQuarterMins" type="number" value="10" min="1" placeholder="Minutes / quarter"><input id="bbQTotal" type="number" value="4" min="1" placeholder="Quarters"></div><button class="primaryBtn" style="margin-top:10px;width:100%" onclick="bbStart()">Start Match</button></div>
       <div class="scorerPanel"><h3>Score Actions</h3><div class="actionGrid"><button onclick="bbPoint(1,1)">+1 Home</button><button onclick="bbPoint(1,2)">+2 Home</button><button onclick="bbPoint(1,3)">+3 Home</button><button onclick="bbPoint(2,1)">+1 Away</button><button onclick="bbPoint(2,2)">+2 Away</button><button onclick="bbPoint(2,3)">+3 Away</button><button onclick="bbUndo()">↩ Undo</button><button onclick="bbReset()" class="dangerBtn">Reset</button></div></div>
@@ -385,6 +433,12 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   <div class="scorerWrap">
     <div class="sportTop"><button class="sportBack" onclick="showSportsHub()">← Sports</button><h2>🏓 Table Tennis Scorer</h2></div>
     <div class="scoreHero"><div class="scoreLine"><div class="teamBox"><small id="ttNameA">Player 1</small><div class="bigScore" id="ttA">0</div></div><div class="scoreMeta"><b>Game <span id="ttGame">1</span></b><div>Best of <span id="ttBestLabel">5</span></div></div><div class="teamBox"><small id="ttNameB">Player 2</small><div class="bigScore" id="ttB">0</div></div></div><div class="matchStatus" id="ttStatus">Game in progress</div></div>
+    <div class="winChance" id="tableTennisWinChance">
+      <div class="winChanceHead"><b>🏆 Winning Chances</b><small>Live estimate</small></div>
+      <div class="winChanceTeams"><div class="winChanceTeam"><b id="ttWinTeamA">Player 1</b><b class="winChancePct" id="ttWinPctA">50%</b></div><div>vs</div><div class="winChanceTeam right"><b id="ttWinTeamB">Player 2</b><b class="winChancePct" id="ttWinPctB">50%</b></div></div>
+      <div class="winChanceBar"><i class="winChanceA" id="ttWinBarA" style="width:50%"></i><i class="winChanceB" id="ttWinBarB" style="width:50%"></i></div>
+      <div class="winChanceNote" id="ttWinNote">Live game estimate.</div>
+    </div>
     <div class="scorerGrid">
       <div class="scorerPanel"><h3>Players & Format</h3><div class="fieldRow"><input id="ttInA" placeholder="Player / Pair 1"><input id="ttInB" placeholder="Player / Pair 2"></div><div class="fieldRow" style="margin-top:10px"><select id="ttBestIn"><option value="3">Best of 3</option><option value="5" selected>Best of 5</option><option value="7">Best of 7</option></select><input id="ttTarget" type="number" value="11" min="1" placeholder="Points"></div><button class="primaryBtn" style="margin-top:10px;width:100%" onclick="ttStart()">Start / New Match</button></div>
       <div class="scorerPanel"><h3>Point Controls</h3><div class="actionGrid"><button onclick="ttPoint(1)">+ Point P1</button><button onclick="ttPoint(2)">+ Point P2</button><button onclick="ttUndo()">↩ Undo</button><button onclick="ttReset()" class="dangerBtn">Reset</button></div></div>
@@ -445,6 +499,16 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
   <div class="metric"><b id="extras">0</b><small>Extras</small></div>
  </div>
  <div class="target" id="targetBox">🎯 Target: <b>--</b></div>
+ <div class="winChance" id="cricketWinChance">
+  <div class="winChanceHead"><b>🏆 Winning Chances</b><small>Live estimate</small></div>
+  <div class="winChanceTeams">
+   <div class="winChanceTeam"><b id="winChanceTeamA">Team A</b><b class="winChancePct" id="winChancePctA">--%</b></div>
+   <div>vs</div>
+   <div class="winChanceTeam right"><b id="winChanceTeamB">Team B</b><b class="winChancePct" id="winChancePctB">--%</b></div>
+  </div>
+  <div class="winChanceBar"><i class="winChanceA" id="winChanceBarA" style="width:50%"></i><i class="winChanceB" id="winChanceBarB" style="width:50%"></i></div>
+  <div class="winChanceNote" id="winChanceNote">Available once the 2nd innings begins.</div>
+ </div>
  <div class="players">
   <div class="player"><small>🏏 Striker</small><b id="sName">Striker</b></div>
   <div class="player"><small>🏃 Non-Striker</small><b id="nsName">Non-Striker</b></div>
@@ -714,6 +778,41 @@ function calcStats(){
  return {bat,bowl,partners,oversMap}
 }
 function currentInningsDeliveries(){return state.deliveries.filter(d=>d.innings===state.innings)}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+function updateCricketWinningChances(){
+ const card=$("cricketWinChance");if(!card)return;
+ const a=state.team1||"Team A",b=state.team2||"Team B";
+ $("winChanceTeamA").textContent=a;$("winChanceTeamB").textContent=b;
+ let pa=50,pb=50,note="Available once the 2nd innings begins.";
+ if(state.ended){
+  const team2Batting=state.firstBattingTeam===2;
+  const winner=state.runs>=state.target?team2Batting?b:a:team2Batting?a:b;
+  pa=winner===a?100:0;pb=100-pa;note="Match finished • based on the final result.";
+ }else if(state.innings===2&&state.target){
+  const ballsLeft=Math.max(0,state.overs*6-state.legal);
+  const oversDone=state.legal/6;
+  const need=Math.max(0,state.target-state.runs);
+  const chaseTeam=state.firstBattingTeam===1?a:b;
+  const chaseIsA=chaseTeam===a;
+  if(need<=0){pa=chaseIsA?100:0;pb=100-pa;note=chaseTeam+" has reached the target."}
+  else if(ballsLeft<=0||state.wickets>=state.wicketsLimit){pa=chaseIsA?0:100;pb=100-pa;note="Chase completed without reaching the target."}
+  else{
+   const currentRR=oversDone>0?state.runs/oversDone:0;
+   const remainingOvers=ballsLeft/6;
+   const requiredRR=need/remainingOvers;
+   const projected=oversDone>0?currentRR*state.overs:0;
+   const scoreEdge=clamp((projected-state.target)/Math.max(20,state.target)*70,-28,28);
+   const wicketEdge=clamp(((state.wicketsLimit-state.wickets)/state.wicketsLimit-0.5)*24,-12,12);
+   const rrEdge=clamp((currentRR-requiredRR)*4,-12,12);
+   let chasePct=clamp(50+scoreEdge+wicketEdge+rrEdge,3,97);
+   if(oversDone<1)chasePct=clamp(50+wicketEdge*.35+rrEdge*.35,15,85);
+   pa=chaseIsA?chasePct:100-chasePct;pb=100-pa;
+   note=need+" needed from "+ballsLeft+" balls • RRR "+requiredRR.toFixed(2);
+  }
+ }
+ $("winChancePctA").textContent=Math.round(pa)+"%";$("winChancePctB").textContent=Math.round(pb)+"%";
+ $("winChanceBarA").style.width=pa+"%";$("winChanceBarB").style.width=pb+"%";$("winChanceNote").textContent=note;
+}
 function render(){
  state.team1=team("team1");state.team2=team("team2");state.overs=overs();state.wicketsLimit=Number($("wicketLimit").value)||state.wicketsLimit;
  let battingTeam=state.innings===1?state.firstBattingTeam:(state.firstBattingTeam===1?2:1);
@@ -729,6 +828,7 @@ function render(){
  $("dots").textContent=state.deliveries.filter(d=>d.innings===state.innings&&d.kind==="run"&&d.runs===0).length;$("legalBalls").textContent=state.legal;
  $("projected").textContent=ov?Math.round(state.runs/ov*state.overs):"--";$("lastOver").textContent=lastOverText();
  $("targetBox").innerHTML=state.target?"🎯 Target <b>"+state.target+"</b> • Need <b>"+Math.max(0,state.target-state.runs)+"</b>":"🎯 Target: <b>--</b>";
+ updateCricketWinningChances();
  $("sName").textContent=$("striker").value||"Striker";$("nsName").textContent=$("nonStriker").value||"Non-Striker";$("bName").textContent=$("bowler").value||"Bowler";
  $("partnership").textContent=partnershipLive();$("currentOver").textContent=ballsText();$("result").textContent=state.result;$("overLabel").textContent="Over "+Math.floor(state.legal/6);
  renderHistory();renderTables(stats);renderPartnerships(stats);renderOvers(stats);showChart(window.chartMode||"runs");save()
@@ -825,6 +925,7 @@ function initGameOn(){
 setInterval(()=>{
   if (fb.running && fb.sec < 5400) {
     fb.sec++;
+    updateFootballWinningChances();
     const m=Math.floor(fb.sec/60), s=fb.sec%60;
     $("fbClock").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
   }
@@ -838,9 +939,52 @@ setInterval(()=>{
   }
 },1000);
 
+/* ===== Winning chances: all sports ===== */
+function setWinChance(prefix,pa,note){
+  if(!$(prefix+'WinPctA'))return;
+  pa=clamp(pa,0,100);const pb=100-pa;
+  $(prefix+'WinPctA').textContent=Math.round(pa)+'%';$(prefix+'WinPctB').textContent=Math.round(pb)+'%';
+  $(prefix+'WinBarA').style.width=pa+'%';$(prefix+'WinBarB').style.width=pb+'%';$(prefix+'WinNote').textContent=note;
+}
+function updateFootballWinningChances(){
+ const a=$('fbTeamA')?.textContent||'Home',b=$('fbTeamB')?.textContent||'Away';
+ $('fbWinTeamA').textContent=a;$('fbWinTeamB').textContent=b;
+ const total=Math.max(1,(+($('fbDuration')?.value||90))*60),remaining=Math.max(0,total-fb.sec),diff=fb.a-fb.b;
+ if(remaining<=0){setWinChance('fb',diff>0?100:diff<0?0:50,'Match time over • '+(diff===0?'Draw':'final score decides the result'));return;}
+ const edge=clamp(diff*(28+22*(1-remaining/total)), -45,45);
+ setWinChance('fb',50+edge,'Score '+fb.a+'–'+fb.b+' • '+Math.ceil(remaining/60)+' min remaining');
+}
+function updateBadmintonWinningChances(){
+ const a=$('bdNameA')?.textContent||'Player 1',b=$('bdNameB')?.textContent||'Player 2';
+ $('bdWinTeamA').textContent=a;$('bdWinTeamB').textContent=b;
+ const need=Math.ceil(bd.best/2),ga=bd.ga,gb=bd.gb;
+ if(ga>=need||gb>=need){setWinChance('bd',ga>gb?100:0,a+' '+(ga>gb?'wins the match.':'')+(gb>ga?b+' wins the match.':''));return;}
+ const pointDiff=bd.a-bd.b,gameDiff=ga-gb;
+ const edge=clamp(gameDiff*30+pointDiff*2.2,-45,45);
+ setWinChance('bd',50+edge,'Game '+bd.game+' • '+bd.a+'–'+bd.b+' • '+ga+'–'+gb+' games');
+}
+function updateBasketballWinningChances(){
+ const a=$('bbNameA')?.textContent||'Home',b=$('bbNameB')?.textContent||'Away';
+ $('bbWinTeamA').textContent=a;$('bbWinTeamB').textContent=b;
+ const final=bb.q>=bb.qa&&bb.sec<=0;
+ const diff=bb.a-bb.b,remainingQ=Math.max(0,bb.qa-bb.q),remaining=remainingQ*bb.mins*60+bb.sec;
+ if(final){setWinChance('bb',diff>0?100:diff<0?0:50,'Match time over • '+(diff===0?'Tie game':'final score decides the result'));return;}
+ const edge=clamp(diff*(3.2+2.5*(1-Math.min(remaining,bb.qa*bb.mins*60)/(bb.qa*bb.mins*60))),-45,45);
+ setWinChance('bb',50+edge,'Score '+bb.a+'–'+bb.b+' • Q'+bb.q+' • '+Math.ceil(bb.sec/60)+' min in quarter');
+}
+function updateTableTennisWinningChances(){
+ const a=$('ttNameA')?.textContent||'Player 1',b=$('ttNameB')?.textContent||'Player 2';
+ $('ttWinTeamA').textContent=a;$('ttWinTeamB').textContent=b;
+ const need=Math.ceil(tt.best/2),ga=tt.ga,gb=tt.gb;
+ if(ga>=need||gb>=need){setWinChance('tt',ga>gb?100:0,(ga>gb?a:b)+' wins the match.');return;}
+ const pointDiff=tt.a-tt.b,gameDiff=ga-gb;
+ const edge=clamp(gameDiff*30+pointDiff*2.2,-45,45);
+ setWinChance('tt',50+edge,'Game '+tt.game+' • '+tt.a+'–'+tt.b+' • '+ga+'–'+gb+' games');
+}
+
 /* ===== Football scorer ===== */
 const fb={a:0,b:0,running:false,sec:0,events:[],shotsA:0,shotsB:0,cards:0,history:[]};
-function fbRender(){ const fc=$("fbClock"); if(fc){const m=Math.floor(fb.sec/60),s=fb.sec%60;fc.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");} $("fbA").textContent=fb.a;$("fbB").textContent=fb.b;$("fbShotsA").textContent=fb.shotsA;$("fbShotsB").textContent=fb.shotsB;$("fbCards").textContent=fb.cards;$("fbEvents").innerHTML=fb.events.length?fb.events.slice(-8).reverse().map(x=>"• "+x).join("<br>"):"No events yet."; }
+function fbRender(){ updateFootballWinningChances(); const fc=$("fbClock"); if(fc){const m=Math.floor(fb.sec/60),s=fb.sec%60;fc.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");} $("fbA").textContent=fb.a;$("fbB").textContent=fb.b;$("fbShotsA").textContent=fb.shotsA;$("fbShotsB").textContent=fb.shotsB;$("fbCards").textContent=fb.cards;$("fbEvents").innerHTML=fb.events.length?fb.events.slice(-8).reverse().map(x=>"• "+x).join("<br>"):"No events yet."; }
 function fbStart(){fb.a=fb.b=fb.sec=0;fb.events=[];fb.shotsA=fb.shotsB=fb.cards=0;fb.history=[];fb.running=false;$("fbTeamA").textContent=$("fbInA").value||"Home";$("fbTeamB").textContent=$("fbInB").value||"Away";$("fbStatus").textContent="Match started";fbRender();}
 function fbGoal(t){fb.history.push([fb.a,fb.b]);t===1?fb.a++:fb.b++;t===1?fb.shotsA++:fb.shotsB++;fb.events.push((t===1?$("fbTeamA").textContent:$("fbTeamB").textContent)+" scored");SFX.footballGoal();fbRender();}
 function fbUndo(){const h=fb.history.pop();if(h){fb.a=h[0];fb.b=h[1];fbRender()}}
@@ -851,7 +995,7 @@ function fbEvent(e){fb.events.push(e);if(e.includes("card"))fb.cards++;SFX.whist
 
 /* ===== Badminton scorer ===== */
 const bd={a:0,b:0,ga:0,gb:0,game:1,target:21,best:3,serve:1,h:[]};
-function bdRender(){["bdA","bdB"].forEach((id,i)=>$(id).textContent=i?bd.b:bd.a);$("bdGame").textContent=bd.game;$("bdGamesA").textContent=bd.ga;$("bdGamesB").textContent=bd.gb;$("bdTotal").textContent=bd.a+bd.b;$("bdServeText").textContent="Server: "+(bd.serve===1?$("bdNameA").textContent:$("bdNameB").textContent)}
+function bdRender(){ updateBadmintonWinningChances(); ["bdA","bdB"].forEach((id,i)=>$(id).textContent=i?bd.b:bd.a);$("bdGame").textContent=bd.game;$("bdGamesA").textContent=bd.ga;$("bdGamesB").textContent=bd.gb;$("bdTotal").textContent=bd.a+bd.b;$("bdServeText").textContent="Server: "+(bd.serve===1?$("bdNameA").textContent:$("bdNameB").textContent)}
 function bdStart(){bd.a=bd.b=bd.ga=bd.gb=0;bd.game=1;bd.target=+($("bdTarget").value||21);bd.best=+($("bdBestIn").value||3);bd.serve=1;bd.h=[];$("bdNameA").textContent=$("bdInA").value||"Player 1";$("bdNameB").textContent=$("bdInB").value||"Player 2";bdRender()}
 function bdPoint(t){bd.h.push({...bd});t===1?bd.a++:bd.b++;bd.serve=t;SFX.racketPoint();const mx=Math.max(bd.a,bd.b),mn=Math.min(bd.a,bd.b);if(mx>=bd.target&&mx-mn>=2){t===1?bd.ga++:bd.gb++;bd.a=bd.b=0;bd.game++;if(bd.ga>=Math.ceil(bd.best/2)||bd.gb>=Math.ceil(bd.best/2))$("bdStatus").textContent=(t===1?$("bdNameA").textContent:$("bdNameB").textContent)+" wins the match";}bdRender()}
 function bdUndo(){const h=bd.h.pop();if(h)Object.assign(bd,h);bdRender()}
@@ -860,7 +1004,7 @@ function bdServe(t){bd.serve=t;bdRender()}
 
 /* ===== Basketball scorer ===== */
 const bb={a:0,b:0,q:1,qa:4,mins:10,sec:600,run:false,fa:0,fb:0,pos:1,h:[]};
-function bbRender(){$("bbA").textContent=bb.a;$("bbB").textContent=bb.b;$("bbQ").textContent=bb.q;$("bbFoulA").textContent=bb.fa;$("bbFoulB").textContent=bb.fb;$("bbPoss").textContent=bb.pos===1?$("bbNameA").textContent:$("bbNameB").textContent;$("bbClock").textContent=String(Math.floor(bb.sec/60)).padStart(2,"0")+":"+String(bb.sec%60).padStart(2,"0")}
+function bbRender(){ updateBasketballWinningChances(); $("bbA").textContent=bb.a;$("bbB").textContent=bb.b;$("bbQ").textContent=bb.q;$("bbFoulA").textContent=bb.fa;$("bbFoulB").textContent=bb.fb;$("bbPoss").textContent=bb.pos===1?$("bbNameA").textContent:$("bbNameB").textContent;$("bbClock").textContent=String(Math.floor(bb.sec/60)).padStart(2,"0")+":"+String(bb.sec%60).padStart(2,"0")}
 function bbStart(){bb.a=bb.b=bb.fa=bb.fb=0;bb.q=1;bb.qa=+($("bbQTotal").value||4);bb.mins=+($("bbQuarterMins").value||10);bb.sec=bb.mins*60;bb.pos=1;bb.h=[];$("bbNameA").textContent=$("bbInA").value||"Home";$("bbNameB").textContent=$("bbInB").value||"Away";$("bbStatus").textContent="Quarter 1";bbRender()}
 function bbPoint(t,p){bb.h.push({...bb});t===1?bb.a+=p:bb.b+=p;bb.pos=t;SFX.basketballPoint(p);bbRender()}
 function bbUndo(){const h=bb.h.pop();if(h)Object.assign(bb,h);bbRender()}
@@ -871,7 +1015,7 @@ function bbFoul(t){t===1?bb.fa++:bb.fb++;SFX.whistle();bbRender()}
 
 /* ===== Table tennis scorer ===== */
 const tt={a:0,b:0,ga:0,gb:0,game:1,target:11,best:5,serve:1,h:[]};
-function ttRender(){$("ttA").textContent=tt.a;$("ttB").textContent=tt.b;$("ttGame").textContent=tt.game;$("ttGamesA").textContent=tt.ga;$("ttGamesB").textContent=tt.gb;$("ttServe").textContent=tt.serve===1?$("ttNameA").textContent:$("ttNameB").textContent;$("ttBestLabel").textContent=tt.best}
+function ttRender(){ updateTableTennisWinningChances(); $("ttA").textContent=tt.a;$("ttB").textContent=tt.b;$("ttGame").textContent=tt.game;$("ttGamesA").textContent=tt.ga;$("ttGamesB").textContent=tt.gb;$("ttServe").textContent=tt.serve===1?$("ttNameA").textContent:$("ttNameB").textContent;$("ttBestLabel").textContent=tt.best}
 function ttStart(){tt.a=tt.b=tt.ga=tt.gb=0;tt.game=1;tt.target=+($("ttTarget").value||11);tt.best=+($("ttBestIn").value||5);tt.serve=1;tt.h=[];$("ttNameA").textContent=$("ttInA").value||"Player 1";$("ttNameB").textContent=$("ttInB").value||"Player 2";ttRender()}
 function ttPoint(t){tt.h.push({...tt});t===1?tt.a++:tt.b++;SFX.racketPoint();if((tt.a+tt.b)%2===0)tt.serve=tt.serve===1?2:1;let mx=Math.max(tt.a,tt.b),mn=Math.min(tt.a,tt.b);if(mx>=tt.target&&mx-mn>=2){t===1?tt.ga++:tt.gb++;tt.a=tt.b=0;tt.game++;if(tt.ga>=Math.ceil(tt.best/2)||tt.gb>=Math.ceil(tt.best/2))$("ttStatus").textContent=(t===1?$("ttNameA").textContent:$("ttNameB").textContent)+" wins the match";}ttRender()}
 function ttUndo(){const h=tt.h.pop();if(h)Object.assign(tt,h);ttRender()}
@@ -918,5 +1062,32 @@ document.addEventListener("keydown",e=>{
   </div>
 </div>
 
+
+<div id="aboutModal" class="aboutModal hidden" onclick="if(event.target===this)closeAbout()">
+  <div class="aboutBox" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+    <div class="aboutHead">
+      <div class="aboutTitle" id="aboutTitle">ℹ️ About Sports Scorer</div>
+      <button class="aboutClose" onclick="closeAbout()" aria-label="Close About">×</button>
+    </div>
+    <div class="aboutSub">A free, mobile-friendly sports scorekeeping project created by Devesh Goswami.</div>
+    <div class="aboutSection"><h4>🏆 About the App</h4><p>Sports Scorer helps users track cricket, football, badminton, basketball and table tennis matches, scores and game progress. It is made for gully sports mans specially</p></div>
+    <div class="aboutSection"><h4>👨‍💻 About the Creator</h4><p>Hi, I’m Devesh Goswami, a student, the creator and developer of Sports Scorer. This project is built to make sports scoring simple, accessible and enjoyable.</p></div>
+    <div class="aboutSection"><h4>✨ Highlights</h4><ul><li>Multi-sport scorekeeping</li><li>Match progress and statistics</li><li>Responsive phone and desktop interface</li><li>Live winning-chances estimates</li></ul></div>
+    <div class="aboutSection"><h4>🙏 Credits</h4><p>Thanks to the open-source tools, browser technologies and resources that help make this project possible. Individual third-party assets can be listed here as the project grows.</p></div>
+    <div class="aboutSection"><h4>🔖 Version</h4><span class="aboutVersion">Version 9.1.3</span></div>
+    <div class="aboutSection"><h4>©️ Copyright</h4><p>Made with care by Devesh Goswami.</p></div>
+  </div>
+</div>
+
+<script>
+
+function openAbout(){
+  $("mainMenu")?.classList.remove("open");
+  $("themeChoices").style.display="none";
+  $("aboutModal")?.classList.remove("hidden");
+}
+function closeAbout(){ $("aboutModal")?.classList.add("hidden"); }
+
+</script>
 </body>
 </html>
