@@ -784,35 +784,128 @@ function updateCricketWinningChances(){
  const card=$("cricketWinChance");if(!card)return;
  const a=state.team1||"Team A",b=state.team2||"Team B";
  $("winChanceTeamA").textContent=a;$("winChanceTeamB").textContent=b;
- let pa=50,pb=50,note="Available once the 2nd innings begins.";
- if(state.ended){
-  const team2Batting=state.firstBattingTeam===2;
-  const winner=state.runs>=state.target?team2Batting?b:a:team2Batting?a:b;
-  pa=winner===a?100:0;pb=100-pa;note="Match finished • based on the final result.";
+
+ let pa=50,pb=50,note="Match not started • 50–50";
+
+ const firstBat=state.firstBattingTeam===1?a:b;
+ const secondBat=state.firstBattingTeam===1?b:a;
+ const firstIsA=state.firstBattingTeam===1;
+ const totalBalls=Math.max(6,state.overs*6);
+ const balls=Math.max(0,state.legal);
+ const ballsLeft=Math.max(0,totalBalls-balls);
+ const progress=clamp(balls/totalBalls,0,1);
+
+ if(!state.started){
+   pa=50;pb=50;note="Start the match to see live winning chances.";
+ }else if(state.ended){
+   // At the end, show the actual result — never infer the winner from a
+   // possibly reset/edited score in the wrong innings.
+   const chaseWon=state.innings===2 && state.target && state.runs>=state.target;
+   const winner=chaseWon?secondBat:firstBat;
+   pa=winner===a?100:0;pb=winner===b?100:0;
+   note="Match finished • "+winner+" won.";
+ }else if(state.innings===1){
+   // 1st innings: estimate the eventual match advantage from the batting
+   // team's projected total. The projection is blended with a neutral
+   // par-score model so a single early boundary cannot swing the odds wildly.
+   const runs=state.runs;
+   const wickets=state.wickets;
+   const oversDone=Math.max(0,balls/6);
+
+   const currentRR=oversDone>0?runs/oversDone:0;
+
+   // Neutral expected scoring rate. It is intentionally modest so the
+   // probability reflects match position rather than pretending to be a
+   // betting-market prediction.
+   const parRR=7.5;
+   const expectedPar=parRR*state.overs;
+
+   let projected;
+   if(oversDone<1){
+     projected=expectedPar+(currentRR-parRR)*Math.min(1,oversDone)*0.35*state.overs;
+   }else{
+     const rawProjection=currentRR*state.overs;
+     const confidence=clamp(oversDone/(state.overs*0.65),0,1);
+     projected=expectedPar*(1-confidence)+rawProjection*confidence;
+   }
+
+   // More wickets lost should reduce the batting side's projected finish.
+   const wicketPenalty=(wickets/Math.max(1,state.wicketsLimit))*expectedPar*0.28;
+   projected-=wicketPenalty;
+
+   const scoreEdge=clamp(
+     (projected-expectedPar)/Math.max(20,expectedPar)*42,
+     -24,24
+   );
+
+   // Early in the innings wickets matter less; later they matter more.
+   const wicketEdge=clamp(
+     ((state.wicketsLimit-wickets)/Math.max(1,state.wicketsLimit)-0.5)
+     *18*clamp(progress*1.6,0,1),
+     -9,9
+   );
+
+   let battingPct=50+scoreEdge+wicketEdge;
+   battingPct=clamp(battingPct,22,78);
+
+   pa=firstIsA?battingPct:100-battingPct;
+   pb=100-pa;
+   note=firstBat+" batting • projected "+Math.max(0,Math.round(projected))+
+        " • "+Math.max(0,ballsLeft)+" balls left";
  }else if(state.innings===2&&state.target){
-  const ballsLeft=Math.max(0,state.overs*6-state.legal);
-  const oversDone=state.legal/6;
-  const need=Math.max(0,state.target-state.runs);
-  const chaseTeam=state.firstBattingTeam===1?a:b;
-  const chaseIsA=chaseTeam===a;
-  if(need<=0){pa=chaseIsA?100:0;pb=100-pa;note=chaseTeam+" has reached the target."}
-  else if(ballsLeft<=0||state.wickets>=state.wicketsLimit){pa=chaseIsA?0:100;pb=100-pa;note="Chase completed without reaching the target."}
-  else{
-   const currentRR=oversDone>0?state.runs/oversDone:0;
-   const remainingOvers=ballsLeft/6;
-   const requiredRR=need/remainingOvers;
-   const projected=oversDone>0?currentRR*state.overs:0;
-   const scoreEdge=clamp((projected-state.target)/Math.max(20,state.target)*70,-28,28);
-   const wicketEdge=clamp(((state.wicketsLimit-state.wickets)/state.wicketsLimit-0.5)*24,-12,12);
-   const rrEdge=clamp((currentRR-requiredRR)*4,-12,12);
-   let chasePct=clamp(50+scoreEdge+wicketEdge+rrEdge,3,97);
-   if(oversDone<1)chasePct=clamp(50+wicketEdge*.35+rrEdge*.35,15,85);
-   pa=chaseIsA?chasePct:100-chasePct;pb=100-pa;
-   note=need+" needed from "+ballsLeft+" balls • RRR "+requiredRR.toFixed(2);
-  }
+   const need=Math.max(0,state.target-state.runs);
+   const chaseIsA=!firstIsA;
+   const chaseTeam=chaseIsA?a:b;
+
+   if(need<=0){
+     pa=chaseIsA?100:0;pb=100-pa;
+     note=chaseTeam+" has reached the target.";
+   }else if(ballsLeft<=0||state.wickets>=state.wicketsLimit){
+     pa=chaseIsA?0:100;pb=100-pa;
+     note="Chase completed without reaching the target.";
+   }else{
+     const oversDone=Math.max(0,balls/6);
+     const currentRR=oversDone>0?state.runs/oversDone:0;
+     const remainingOvers=ballsLeft/6;
+     const requiredRR=need/Math.max(remainingOvers,1/6);
+
+     // Compare the required rate with a reasonable scoring-rate baseline.
+     const rrEdge=clamp((7.5-requiredRR)*7,-28,28);
+
+     // Current scoring form matters, but not too much during the first few balls.
+     const formEdge=clamp((currentRR-requiredRR)*3.5,-18,18)*
+                    clamp(oversDone/Math.max(1,state.overs*0.35),0,1);
+
+     // Wickets in hand are a major chase advantage.
+     const wicketsInHand=state.wicketsLimit-state.wickets;
+     const wicketEdge=clamp(
+       (wicketsInHand/state.wicketsLimit-0.5)*30,
+       -15,15
+     );
+
+     // How much of the target has already been scored.
+     const chaseProgress=state.runs/Math.max(1,state.target);
+     const progressEdge=clamp((chaseProgress-0.5)*24,-12,12);
+
+     let chasePct=50+rrEdge+formEdge+wicketEdge+progressEdge;
+
+     // Keep early-chase probabilities realistic instead of overreacting to
+     // the first one or two deliveries.
+     const earlyWeight=clamp(oversDone/Math.max(1,state.overs*0.22),0,1);
+     chasePct=50+(chasePct-50)*(0.35+0.65*earlyWeight);
+     chasePct=clamp(chasePct,5,95);
+
+     pa=chaseIsA?chasePct:100-chasePct;
+     pb=100-pa;
+     note=need+" needed from "+ballsLeft+" balls • RRR "+requiredRR.toFixed(2);
+   }
  }
- $("winChancePctA").textContent=Math.round(pa)+"%";$("winChancePctB").textContent=Math.round(pb)+"%";
- $("winChanceBarA").style.width=pa+"%";$("winChanceBarB").style.width=pb+"%";$("winChanceNote").textContent=note;
+
+ $("winChancePctA").textContent=Math.round(pa)+"%";
+ $("winChancePctB").textContent=Math.round(pb)+"%";
+ $("winChanceBarA").style.width=pa+"%";
+ $("winChanceBarB").style.width=pb+"%";
+ $("winChanceNote").textContent=note;
 }
 function render(){
  state.team1=team("team1");state.team2=team("team2");state.overs=overs();state.wicketsLimit=Number($("wicketLimit").value)||state.wicketsLimit;
@@ -1075,7 +1168,7 @@ document.addEventListener("keydown",e=>{
     <div class="aboutSection"><h4>👨‍💻 About the Creator</h4><p>Hi, I’m Devesh Goswami, a student, the creator and developer of Sports Scorer. This project is built to make sports scoring simple, accessible and enjoyable.</p></div>
     <div class="aboutSection"><h4>✨ Highlights</h4><ul><li>Multi-sport scorekeeping</li><li>Match progress and statistics</li><li>Responsive phone and desktop interface</li><li>Live winning-chances estimates</li></ul></div>
     <div class="aboutSection"><h4>🙏 Credits</h4><p>Thanks to the open-source tools, browser technologies and resources that help make this project possible. Individual third-party assets can be listed here as the project grows.</p></div>
-    <div class="aboutSection"><h4>🔖 Version</h4><span class="aboutVersion">Version 9.1.4</span></div>
+    <div class="aboutSection"><h4>🔖 Version</h4><span class="aboutVersion">Version 9.1.6</span></div>
     <div class="aboutSection"><h4>©️ Copyright</h4><p>Made with care by Devesh Goswami.</p></div>
   </div>
 </div>
