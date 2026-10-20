@@ -8,6 +8,11 @@
 <meta name="description" content="Sports Scorer is a free online scorekeeping app for cricket, football, badminton, basketball and table tennis. Track scores, match stats and game progress on phone or desktop.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Devesh Goswami">
+<meta name="application-name" content="Sports Scorer">
+<meta name="apple-mobile-web-app-title" content="Sports Scorer">
+<meta property="og:locale" content="en_IN">
+<meta property="og:image:alt" content="Sports Scorer logo">
+<meta name="twitter:image:alt" content="Sports Scorer logo">
 <link rel="canonical" href="https://sports-scorer.onrender.com/">
 <link rel="icon" type="image/png" href="/public/favicon.png">
 <meta property="og:type" content="website">
@@ -23,24 +28,61 @@
 <title>Sports Scorer – Free Online Cricket & Sports Scorekeeper</title>
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Sports Scorer",
-  "url":"https://sports-scorer.onrender.com/",
-  "description":"Free online sports scorekeeping app for cricket, football, badminton, basketball and table tennis.",
-  "applicationCategory":"SportsApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires a modern web browser",
-  "author":{"@type":"Person","name":"Devesh Goswami"}
-}
-</script>
-<script type="application/ld+json">
-{
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Sports Scorer",
-  "alternateName": "Sports Scorer",
-  "url": "https://sports-scorer.onrender.com/"
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://sports-scorer.onrender.com/#website",
+      "name": "Sports Scorer",
+      "alternateName": ["SportsScorer"],
+      "url": "https://sports-scorer.onrender.com/",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://sports-scorer.onrender.com/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://sports-scorer.onrender.com/#webpage",
+      "url": "https://sports-scorer.onrender.com/",
+      "name": "Sports Scorer – Free Online Cricket & Sports Scorekeeper",
+      "isPartOf": {
+        "@id": "https://sports-scorer.onrender.com/#website"
+      },
+      "about": {
+        "@id": "https://sports-scorer.onrender.com/#organization"
+      },
+      "description": "Sports Scorer is a free online scorekeeping app for cricket, football, badminton, basketball and table tennis.",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sports-scorer.onrender.com/#organization",
+      "name": "Sports Scorer",
+      "url": "https://sports-scorer.onrender.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sports-scorer.onrender.com/public/logo.png"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Devesh Goswami"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://sports-scorer.onrender.com/#application",
+      "name": "Sports Scorer",
+      "url": "https://sports-scorer.onrender.com/",
+      "description": "Free online sports scorekeeping app for cricket, football, badminton, basketball and table tennis.",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires a modern web browser",
+      "publisher": {
+        "@id": "https://sports-scorer.onrender.com/#organization"
+      }
+    }
+  ]
 }
 </script>
 <style>
@@ -330,8 +372,8 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
 <div id="gameSplash" aria-label="Game On loading screen">
   <div class="splashInner">
     <div class="splashLogo"><img src="/public/logo.png" alt="Sports Scorer Logo"></div>
-    <div class="splashTitle">Game On</div>
-    <div class="splashBy">by Devesh Goswami</div>
+    <div class="splashTitle">Sports Scorer</div>
+    <div class="splashBy">GAME ON • by Devesh Goswami</div>
     <div class="loadingText">Loading<span class="loadingDots"><i></i><i></i><i></i></span></div>
   </div>
 </div>
@@ -366,7 +408,7 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
       <button class="sportCard" onclick="openSport('table-tennis')"><span class="sportIcon">🏓</span><span class="sportName">Table Tennis</span><span class="sportHint">Game scorer</span></button>
     </div>
     <div class="seoIntro">
-      <h2>Free Online Sports Scorer</h2>
+      <h2>Sports Scorer – Free Online Sports Scoring</h2>
       <p>Sports Scorer is a free, mobile-friendly online scorekeeper for <strong>cricket, football, badminton, basketball and table tennis</strong>. Choose a sport to track scores and match progress on your phone, tablet or desktop.</p>
     </div>
   </div>
