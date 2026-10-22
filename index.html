@@ -366,6 +366,11 @@ h1,h2,h3,p{margin:0}.brand h1{font-size:22px}.brand small{color:var(--muted)}
 .aboutVersion{display:inline-block;margin-top:6px;padding:5px 9px;border-radius:99px;background:rgba(24,196,125,.12);color:var(--green);font-size:11px;font-weight:800}
 @media(max-width:520px){.aboutBox{padding:18px;border-radius:19px}.aboutTitle{font-size:20px}}
 
+
+.routeSeoIntro{margin:16px 0 20px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--panel);color:var(--text)}
+.routeSeoIntro h2{margin:0 0 8px;font-size:18px;line-height:1.35}
+.routeSeoIntro p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+@media(max-width:520px){.routeSeoIntro{padding:13px 14px}.routeSeoIntro h2{font-size:16px}}
 </style>
 </head>
 <body>
@@ -1038,21 +1043,101 @@ document.addEventListener("click",e=>{
   if(menu && !menu.contains(e.target)) $("mainMenu")?.classList.remove("open");
 });
 
-/* ===== Sports Arena navigation ===== */
+/* ===== Sports Arena navigation + clean URL routes ===== */
+const sportSectionMap={
+  cricket:"scorerApp",
+  football:"footballScorer",
+  badminton:"badmintonScorer",
+  basketball:"basketballScorer",
+  "table-tennis":"tableTennisScorer"
+};
+const sportPageInfo={
+  home:{
+    path:"/",
+    title:"Sports Scorer – Free Online Cricket & Sports Scorekeeper",
+    description:"Sports Scorer is a free online scorekeeping app for cricket, football, badminton, basketball and table tennis. Track scores, match stats and game progress on phone or desktop.",
+    heading:"Sports Scorer – Free Online Sports Scoring",
+    paragraph:"Sports Scorer is a free, mobile-friendly online scorekeeper for cricket, football, badminton, basketball and table tennis. Choose a sport to track scores and match progress on your phone, tablet or desktop."
+  },
+  cricket:{path:"/cricket",title:"Free Online Cricket Scorekeeper | Sports Scorer",description:"Keep track of cricket runs, wickets, overs, innings and match progress with Sports Scorer's free online cricket scorekeeper for mobile and desktop.",heading:"Free Online Cricket Scorekeeper",paragraph:"Use Sports Scorer to record cricket runs, wickets, overs and innings as your match progresses. The cricket scorer includes match controls and score tracking in a mobile-friendly interface, with no account required."},
+  football:{path:"/football",title:"Free Online Football Scorekeeper | Sports Scorer",description:"Track football goals, match time, halves, cards and match statistics with Sports Scorer's free online football scorekeeper.",heading:"Free Online Football Scorekeeper",paragraph:"Keep a clear record of a football match with team goals, match timer, half changes, cards and basic match statistics. Sports Scorer works in a browser on phones and desktop computers."},
+  badminton:{path:"/badminton",title:"Free Online Badminton Scorekeeper | Sports Scorer",description:"Score badminton games and matches, track player points and games, and follow match progress with the free Sports Scorer badminton tool.",heading:"Free Online Badminton Scorekeeper",paragraph:"Use this badminton scorekeeper to track points, games and match progress for two players or pairs. Choose a match format and keep the score visible on a phone, tablet or computer."},
+  basketball:{path:"/basketball",title:"Free Online Basketball Scorekeeper | Sports Scorer",description:"Track basketball points, quarters, game clock, fouls and possession with Sports Scorer's free online basketball scorekeeper.",heading:"Free Online Basketball Scorekeeper",paragraph:"Record basketball points for both teams and follow the quarter, game clock, fouls and possession. Sports Scorer provides a browser-based scoring interface for casual games and practice matches."},
+  "table-tennis":{path:"/table-tennis",title:"Free Online Table Tennis Scorekeeper | Sports Scorer",description:"Track table tennis points, games, serve rotation and match format with the free online table tennis scorekeeper from Sports Scorer.",heading:"Free Online Table Tennis Scorekeeper",paragraph:"Keep score during table tennis matches with player points, games, match format and serve rotation. Open the scorer in your browser on mobile or desktop and follow each game as it happens."}
+};
 function hideAllSports(){
   ["sportsHub","footballScorer","badmintonScorer","basketballScorer","tableTennisScorer","scorerApp"].forEach(id=>{
     const el=$(id); if(el) el.classList.remove("active");
   });
 }
-function openSport(sport){
-  hideAllSports();
-  const map={cricket:"scorerApp",football:"footballScorer",badminton:"badmintonScorer",basketball:"basketballScorer","table-tennis":"tableTennisScorer"};
-  $(map[sport]||"sportsHub").classList.add("active");
+function setMetaContent(selector,value){
+  const el=document.querySelector(selector);
+  if(el) el.setAttribute("content",value);
 }
-function showSportsHub(){ hideAllSports(); $("sportsHub").classList.add("active"); }
+function updatePageMetadata(info){
+  document.title=info.title;
+  const canonical=document.querySelector('link[rel="canonical"]');
+  if(canonical) canonical.href="https://sports-scorer.onrender.com"+info.path;
+  setMetaContent('meta[name="description"]',info.description);
+  setMetaContent('meta[property="og:url"]',"https://sports-scorer.onrender.com"+info.path);
+  setMetaContent('meta[property="og:title"]',info.title);
+  setMetaContent('meta[property="og:description"]',info.description);
+  setMetaContent('meta[name="twitter:title"]',info.title);
+  setMetaContent('meta[name="twitter:description"]',info.description);
+  const schema=document.querySelector('script[type="application/ld+json"]');
+  if(schema){
+    try{
+      const data=JSON.parse(schema.textContent);
+      const page=(data["@graph"]||[]).find(item=>item["@type"]==="WebPage");
+      if(page){
+        page["@id"]="https://sports-scorer.onrender.com"+info.path+"#webpage";
+        page.url="https://sports-scorer.onrender.com"+info.path;
+        page.name=info.title;
+        page.description=info.description;
+      }
+      schema.textContent=JSON.stringify(data);
+    }catch(e){console.warn("Could not update page structured data",e);}
+  }
+}
+function updateSportIntro(sport,info){
+  if(!sport) return;
+  const sectionId=sportSectionMap[sport];
+  const section=$(sectionId);
+  if(!section) return;
+  let intro=$("routeSeoIntro");
+  if(!intro){
+    intro=document.createElement("section");
+    intro.id="routeSeoIntro";
+    intro.className="routeSeoIntro";
+  }
+  intro.innerHTML='<h2>'+info.heading+'</h2><p>'+info.paragraph+'</p>';
+  const anchor=sport==="cricket"?section.querySelector(".topbar"):section.querySelector(".sportTop");
+  if(anchor) anchor.insertAdjacentElement("afterend",intro);
+}
+function renderSportRoute(sport,changeUrl){
+  if(!sportPageInfo[sport||"home"]) sport=null;
+  const info=sportPageInfo[sport||"home"];
+  hideAllSports();
+  const sectionId=sport?sportSectionMap[sport]:"sportsHub";
+  const section=$(sectionId);
+  if(section) section.classList.add("active");
+  if(sport) updateSportIntro(sport,info);
+  updatePageMetadata(info);
+  if(changeUrl && window.location.pathname!==info.path){
+    history.pushState({sport:sport||null},"",info.path);
+  }
+}
+function openSport(sport){renderSportRoute(sport,true);}
+function showSportsHub(){renderSportRoute(null,true);}
+function routeFromCurrentPath(){
+  const path=window.location.pathname.replace(/\/+$/,"")||"/";
+  const found=Object.keys(sportPageInfo).find(key=>sportPageInfo[key].path===path);
+  return found&&found!=="home"?found:null;
+}
+window.addEventListener("popstate",()=>renderSportRoute(routeFromCurrentPath(),false));
 function initGameOn(){
   const splash=$("gameSplash");
-  $("sportsHub").classList.add("active");
+  renderSportRoute(routeFromCurrentPath(),false);
   setTimeout(()=>splash.classList.add("hide"),5000);
 }
 
@@ -1210,7 +1295,7 @@ document.addEventListener("keydown",e=>{
     <div class="aboutSection"><h4>👨‍💻 About the Creator</h4><p>Hi, I’m Devesh Goswami, a student, the creator and developer of Sports Scorer. This project is built to make sports scoring simple, accessible and enjoyable.</p></div>
     <div class="aboutSection"><h4>✨ Highlights</h4><ul><li>Multi-sport scorekeeping</li><li>Match progress and statistics</li><li>Responsive phone and desktop interface</li><li>Live winning-chances estimates</li></ul></div>
     <div class="aboutSection"><h4>🙏 Credits</h4><p>Thanks to the open-source tools, browser technologies and resources that help make this project possible. Individual third-party assets can be listed here as the project grows.</p></div>
-    <div class="aboutSection"><h4>🔖 Version</h4><span class="aboutVersion">Version 9.1.6</span></div>
+    <div class="aboutSection"><h4>🔖 Version</h4><span class="aboutVersion">Version 10.1.6</span></div>
     <div class="aboutSection"><h4>©️ Copyright</h4><p>Made with care by Devesh Goswami.</p></div>
   </div>
 </div>
