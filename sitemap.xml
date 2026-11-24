@@ -3,20 +3,20 @@
   <url>
     <loc>https://sports-scorer.onrender.com/</loc>
   </url> 
-<url>
-  <loc>https://sports-scorer.onrender.com/cricket</loc>
-</url>
-<url>
-  <loc>https://sports-scorer.onrender.com/football</loc>
-</url>
-<url>
-  <loc>https://sports-scorer.onrender.com/badminton</loc>
-</url>
-<url>
-  <loc>https://sports-scorer.onrender.com/basketball</loc>
-</url>
-<url>
-  <loc>https://sports-scorer.onrender.com/table-tennis</loc>
-</url>
+  <url>
+    <loc>https://sports-scorer.onrender.com/cricket</loc>
+  </url>
+  <url>
+    <loc>https://sports-scorer.onrender.com/football</loc>
+  </url>
+  <url>
+    <loc>https://sports-scorer.onrender.com/badminton</loc>
+  </url>
+  <url>
+    <loc>https://sports-scorer.onrender.com/basketball</loc>
+  </url>
+  <url>
+    <loc>https://sports-scorer.onrender.com/table-tennis</loc>
+  </url>
 
 </urlset>
